@@ -18,14 +18,14 @@ class AuthService {
     }
 
     authenticate(username: string, password: string) {
-        // console.log(username, password, this.#role);
-
         if(username === this.#admin.username) {
             if(password === this.#admin.password) {
                 this.#token = "fake_token";
                 this.#role = "admin";
             }
         }
+
+        console.log(username, password, this.#role);
 
         return this.getRole();
     }

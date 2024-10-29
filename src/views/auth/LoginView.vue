@@ -42,10 +42,12 @@ export default defineComponent({
         const login = () => {
             const role = auth.authenticate(username.value, password.value);
 
+            console.log(role);
+
             if(role === 'admin') {
                 router.push({ name: 'admin.problem-set.list' });
             } else {
-                router.push({ name: "player" });
+                router.push({ name: "player.problem-set.list" });
             }
         }
 
