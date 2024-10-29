@@ -1,45 +1,57 @@
 <template>
-    <form>
-        <div class="row">
-            <div class="col-6">
-                <label for="name" class="form-label">Name</label>
-            </div>
-            <div class="col-6">
-                <input type="text" name="name" id="name" class="form-control form-control-sm">
-            </div>
-            <div class="col-6">
-                <label for="username" class="form-label">Username</label>
-            </div>
-            <div class="col-6">
-                <input type="text" name="username" id="username" class="form-control form-control-sm">
-            </div>
-            <div class="col-6">
-                <label for="password" class="form-label">Password</label>
-            </div>
-            <div class="col-6">
-                <input type="password" name="password" id="password" class="form-control form-control-sm">
-            </div>
-            <div class="col-12">
-                <button type="button" class="btn btn-sm btn-primary w-100" @click="login()">Login</button>
-            </div>
-        </div>
-    </form>
+    <el-form>
+        <el-row>
+            <el-col :span="12">
+                <el-form-item label="Username">
+                    <el-input size="small" v-model="username"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="12">
+                <el-form-item label="Password">
+                    <el-input size="small" type="password" v-model="password"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+
+        <el-row>
+            <el-col :span="24">
+                <el-button type="primary" size="small" @click="login" class="w-100">Login</el-button>
+            </el-col>
+        </el-row>
+    </el-form>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import AuthService from '@/services/Auth'
 
 export default defineComponent({
     name: "LoginView",
     setup() {
         const router = useRouter();
+        const auth = new AuthService();
         
+        // Reactive variables for form inputs
+        const username = ref('');
+        const password = ref('');
+
         const login = () => {
-            router.push({ name : 'admin.problem-set.list' });
+            const role = auth.authenticate(username.value, password.value);
+
+            if(role === 'admin') {
+                router.push({ name: 'admin.problem-set.list' });
+            } else {
+                router.push({ name: "player" });
+            }
         }
 
         return {
+            username,
+            password,
             login
         }
     }
