@@ -83,7 +83,7 @@ export default defineComponent({
     },
     setup() {
         const testCaseData = reactive({
-            list: [],
+            list: [] as { id: number | null, input_file: null, output_file: null, hidden_test_case: boolean }[],
         });
 
         const initTestCase = () => ({
@@ -98,12 +98,12 @@ export default defineComponent({
             testCaseData.list.push(newTestCase);
         };
 
-        const removeTestCase = (index) => {
+        const removeTestCase = (index: number) => {
             testCaseData.list.splice(index, 1);
         };
 
         // Handle file change for both input and output files
-        const handleFileChange = (index, type, file) => {
+        const handleFileChange = (index: number, type : string, file) => {
             if (file && file.raw) {
                 testCaseData.list[index][type] = file.raw;
             } else {

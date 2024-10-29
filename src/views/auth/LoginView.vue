@@ -36,7 +36,7 @@ export default defineComponent({
         const router = useRouter();
         
         const login = () => {
-            router.push({ name : 'problem-set.list' });
+            router.push({ name : 'admin.problem-set.list' });
         }
 
         return {
