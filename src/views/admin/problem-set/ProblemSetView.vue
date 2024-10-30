@@ -65,7 +65,7 @@
         <tbody>
             <tr v-for="(problemSet, problemSetIndex) in problemSetData.list" :key="'problem_set_' + problemSetIndex">
                 <td>
-                    <router-link :to="{ name: 'problem.list', params: { problem_set_id: problemSet.id }}" class="btn btn-sm btn-primary">
+                    <router-link :to="{ name: 'admin.problem.list', params: { problem_set_id: problemSet.id }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-eye p-0"></i>
                     </router-link>
                 </td>

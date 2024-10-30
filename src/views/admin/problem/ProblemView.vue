@@ -13,7 +13,7 @@
         <tbody>
             <tr v-for="(problem, problemIndex) in problemData.list" :key="'problem_' + problemIndex">
                 <td>
-                    <router-link :to="{ name: 'problem.detail', params: { problem_id: problem.id }}" class="btn btn-sm btn-primary">
+                    <router-link :to="{ name: 'admin.problem.detail', params: { problem_id: problem.id }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-eye p-0"></i>
                     </router-link>
                 </td>
