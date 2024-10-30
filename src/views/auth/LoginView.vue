@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import AuthService from '@/services/Auth'
+import AuthService from '@/services/Auth';
 
 export default defineComponent({
     name: "LoginView",
@@ -41,13 +41,18 @@ export default defineComponent({
 
         const login = () => {
             const role = auth.authenticate(username.value, password.value);
+            console.log("Authenticated Role:", role); // Log the authenticated role
 
-            console.log(role);
-
-            if(role === 'admin') {
-                router.push({ name: 'admin.problem-set.list' });
+            if (role) {
+                // Redirect based on role
+                if (role === 'admin') {
+                    router.push({ name: 'admin.problem-set.list' });
+                } else {
+                    router.push({ name: "player.problem-set.list" });
+                }
             } else {
-                router.push({ name: "player.problem-set.list" });
+                console.error('Login failed, role not found.');
+                // You might want to show an error message to the user here
             }
         }
 

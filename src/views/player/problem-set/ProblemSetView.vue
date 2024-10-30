@@ -9,7 +9,7 @@
             <tr>
                 <th>Open</th>
                 <th>Title</th>
-                <th>Total Problem</th>
+                <th>Total Right Answer</th>
             </tr>
         </thead>
 
@@ -21,7 +21,7 @@
                     </router-link>
                 </td>
                 <td>{{ problemSet.title }}</td>
-                <td>{{ problemSet.total_problem }}</td>
+                <td>{{ problemSet.total_right_answer }}</td>
             </tr>
         </tbody>
     </table>
@@ -42,7 +42,7 @@ export default defineComponent({
                 id: null,
                 selected: boolean,
                 title: string,
-                total_problem: number,
+                total_right_answer: number,
             }[],
             all_selected: false
         });
@@ -60,13 +60,13 @@ export default defineComponent({
                     id: 1,
                     selected: false,
                     title: "problem set a",
-                    total_problem: 2
+                    total_right_answer: 2
                 },
                 {
                     id: 2,
                     selected: false,
                     title: "problem set b",
-                    total_problem: 3
+                    total_right_answer: 3
                 }
             ];
         }
@@ -86,7 +86,7 @@ export default defineComponent({
                 ...problemSetData.form_value,
                 id: 3,
                 selected: false,
-                total_problem: 0,
+                total_right_answer: 0,
             }
 
             __addProblemSetToArray(dummyData);

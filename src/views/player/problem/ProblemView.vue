@@ -5,52 +5,22 @@
             <tr>
                 <th>Open</th>
                 <th>Title</th>
-                <th>Hidden</th>
-                <th>Action</th>
+                <th>Total Right Answer</th>
             </tr>
         </thead>
 
         <tbody>
             <tr v-for="(problem, problemIndex) in problemData.list" :key="'problem_' + problemIndex">
                 <td>
-                    <router-link :to="{ name: 'admin.problem.detail', params: { problem_id: problem.id }}" class="btn btn-sm btn-primary">
+                    <router-link :to="{ name: 'player.problem.detail', params: { problem_id: problem.id }}" class="btn btn-sm btn-primary">
                         <i class="fas fa-eye p-0"></i>
                     </router-link>
                 </td>
                 <td>
-                    <input type="text" :name="`title[${problemIndex}]`" class="form-control form-control-sm" v-model="problem.title">
+                    {{  problem.title }}
+                    <!-- <input type="text" :name="`title[${problemIndex}]`" class="form-control form-control-sm" v-model="problem.title"> -->
                 </td>
-                <td>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="new_hidden_problem" :value="true" v-model="problemData.form_value.hidden_problem">
-                            <label class="form-check-label" for="new_hidden_problem1">
-                                Yes
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="col-9">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="new_hidden_problem" :value="false" v-model="problemData.form_value.hidden_problem">
-                            <label class="form-check-label" for="new_hidden_problem2">
-                                Don't Hide
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                </td>
-                <td>
-                    <div class="d-flex justify-content-center gap-3">
-                        <button type="button" class="btn btn-sm btn-info">
-                            <i class="fas fa-check p-0"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-danger" @click="removeProblem(problemIndex)">
-                            <i class="fas fa-trash p-0"></i>
-                        </button>
-                    </div>
-                </td>
+                <td>{{ problem.total_right_answer }}</td>
             </tr>
         </tbody>
     </table>
