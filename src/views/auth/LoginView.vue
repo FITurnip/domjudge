@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import AuthService from '@/services/Auth';
+import AuthService from '@/services/AuthService';
 
 export default defineComponent({
     name: "LoginView",

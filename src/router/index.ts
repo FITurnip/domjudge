@@ -2,7 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import adminRoutes from './adminRoutes';
 import playerRoutes from './playerRoutes';
-import AuthService from '@/services/Auth'; // Import the AuthService
+import AuthService from '@/services/AuthService'; // Import the AuthService
 
 const authService = new AuthService(); // Create an instance of AuthService
 
