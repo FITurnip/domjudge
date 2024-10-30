@@ -18,7 +18,15 @@
 
         <el-row>
             <el-col :span="24">
-                <el-button type="primary" size="small" @click="login" class="w-100">Login</el-button>
+                <el-button 
+                    type="primary" 
+                    size="small" 
+                    @click="login" 
+                    :loading="isLoading" 
+                    class="w-100"
+                >
+                    Login
+                </el-button>
             </el-col>
         </el-row>
     </el-form>
@@ -27,7 +35,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import AuthService from '@/services/AuthService';
+import AuthService from '@/services/user/AuthService';
 
 export default defineComponent({
     name: "LoginView",
@@ -38,28 +46,39 @@ export default defineComponent({
         // Reactive variables for form inputs
         const username = ref('');
         const password = ref('');
+        const isLoading = ref(false); // Loading state
 
-        const login = () => {
-            const role = auth.authenticate(username.value, password.value);
-            console.log("Authenticated Role:", role); // Log the authenticated role
+        const login = async () => {
+            isLoading.value = true; // Set loading to true
 
-            if (role) {
-                // Redirect based on role
-                if (role === 'admin') {
-                    router.push({ name: 'admin.problem-set.list' });
+            try {
+                const role = await auth.authenticate(username.value, password.value) as unknown as string;
+                console.log("Authenticated Role:", role); // Log the authenticated role
+
+                if (role) {
+                    // Redirect based on role
+                    if (role === 'admin') {
+                        router.push({ name: 'admin.problem-set.list' });
+                    } else {
+                        router.push({ name: "player.problem-set.list" });
+                    }
                 } else {
-                    router.push({ name: "player.problem-set.list" });
+                    console.error('Login failed, role not found.');
+                    // You might want to show an error message to the user here
                 }
-            } else {
-                console.error('Login failed, role not found.');
-                // You might want to show an error message to the user here
+            } catch (error) {
+                console.error('Authentication error:', error);
+                // Handle authentication error (e.g., show a message)
+            } finally {
+                isLoading.value = false; // Reset loading state
             }
         }
 
         return {
             username,
             password,
-            login
+            login,
+            isLoading
         }
     }
 });
