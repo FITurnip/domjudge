@@ -17,6 +17,7 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
+      component: () => import('@/components/AdminLayout.vue'), // Use dynamic import
       children: [...adminRoutes], // Admin-specific routes
       meta: { requiresAuth: true }, // Mark admin routes as requiring auth
     },
