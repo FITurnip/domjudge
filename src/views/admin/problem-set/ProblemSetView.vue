@@ -9,14 +9,14 @@
                 <input type="text" name="new_title" class="form-control form-control-sm" v-model="problemSetData.form_value.title">
             </div>
             <div class="col-3">
-                <label for="new_hidden_problem_set" class="form-label">Hidden Problem Set</label>
+                <label for="new_isHidden" class="form-label">Hidden Problem Set</label>
             </div>
             <div class="col-9">
                 <div class="row">
                     <div class="col-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="new_hidden_problem_set" :value="true" v-model="problemSetData.form_value.hidden_problem_set">
-                            <label class="form-check-label" for="new_hidden_problem_set1">
+                            <input class="form-check-input" type="radio" name="new_isHidden" :value="true" v-model="problemSetData.form_value.isHidden">
+                            <label class="form-check-label" for="new_isHidden1">
                                 Yes
                             </label>
                         </div>
@@ -24,8 +24,8 @@
 
                     <div class="col-9">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="new_hidden_problem_set" :value="false" v-model="problemSetData.form_value.hidden_problem_set">
-                            <label class="form-check-label" for="new_hidden_problem_set2">
+                            <input class="form-check-input" type="radio" name="new_isHidden" :value="false" v-model="problemSetData.form_value.isHidden">
+                            <label class="form-check-label" for="new_isHidden2">
                                 Don't Hide
                             </label>
                         </div>
@@ -35,6 +35,7 @@
             <div class="col-12">
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-sm btn-primary"
+                        type="button"
                         :disabled="!problemSetData.form_value.title"
                         @click="addProblemSet()">Save</button>
                 </div>
@@ -80,8 +81,8 @@
                 <div class="row">
                     <div class="col-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="new_hidden_problem_set" :value="true" v-model="problemSetData.form_value.hidden_problem_set">
-                            <label class="form-check-label" for="new_hidden_problem_set1">
+                            <input class="form-check-input" type="radio" :name="`new_isHidden[${problemSetIndex}]`" :value="true" v-model="problemSet.isHidden">
+                            <label class="form-check-label" :for="`new_isHidden1[${problemSetIndex}]`">
                                 Yes
                             </label>
                         </div>
@@ -89,8 +90,8 @@
 
                     <div class="col-9">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="new_hidden_problem_set" :value="false" v-model="problemSetData.form_value.hidden_problem_set">
-                            <label class="form-check-label" for="new_hidden_problem_set2">
+                            <input class="form-check-input" type="radio" :name="`new_isHidden[${problemSetIndex}]`" :value="false" v-model="problemSet.isHidden">
+                            <label class="form-check-label" :for="`new_isHidden2[${problemSetIndex}]`">
                                 Don't Hide
                             </label>
                         </div>
@@ -100,7 +101,7 @@
                 <td>
                     <div class="d-flex justify-content-center gap-3">
                         <button type="button" class="btn btn-sm btn-info">
-                            <i class="fas fa-check p-0"></i>
+                            <i class="fas fa-check p-0" @click="updateProblemSet(problemSetIndex)"></i>
                         </button>
                         <button type="button" class="btn btn-sm btn-danger" @click="removeProblemSet(problemSetIndex)">
                             <i class="fas fa-trash p-0"></i>
@@ -114,6 +115,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from "vue";
+import ProblemSet from '@/backend/ProblemSet';
 
 export default defineComponent({
     name: "ProblemSetView",
@@ -121,13 +123,14 @@ export default defineComponent({
         const problemSetData = reactive({
             form_value: {
                 title: "" as string,
-                hidden_problem_set: true as boolean,
+                isHidden: true as boolean,
             },
             list : [] as {
-                id: null,
+                id: any,
                 selected: boolean,
                 title: string,
                 total_problem: number,
+                isHidden: boolean,
             }[],
             all_selected: false
         });
@@ -135,25 +138,19 @@ export default defineComponent({
         const initFormValue = () => {
             problemSetData.form_value = {
                 title: "",
-                hidden_problem_set: true
+                isHidden: true
             }
         }
 
-        const getProblemSetList = () => {
-            problemSetData.list = [
-                {
-                    id: 1,
-                    selected: false,
-                    title: "problem set a",
-                    total_problem: 2
-                },
-                {
-                    id: 2,
-                    selected: false,
-                    title: "problem set b",
-                    total_problem: 3
-                }
-            ];
+        const getProblemSetList = async () => {
+            const { data } = await ProblemSet.getAll();
+            const formatedData = data.map((item: any) => ({
+                ...item,
+                selected: false,
+                total_problem: 0,
+            }));
+            
+            problemSetData.list = formatedData;
         }
 
         const selectAllProblemSet = () => {
@@ -162,24 +159,31 @@ export default defineComponent({
             });
         }
 
-        const __addProblemSetToArray = (data) => {
+        const __addProblemSetToArray = (data: any) => {
             problemSetData.list.push(data);
         };
 
-        const addProblemSet = () => {
-            const dummyData = {
+        const addProblemSet = async () => {       
+            const { data } = await ProblemSet.create(problemSetData.form_value);
+
+            const insertData = {
                 ...problemSetData.form_value,
-                id: 3,
+                id: data.id,
                 selected: false,
                 total_problem: 0,
             }
 
-            __addProblemSetToArray(dummyData);
+            __addProblemSetToArray(insertData);
             initFormValue();
         }
 
-        const removeProblemSet = (index) => {
-            problemSetData.list.splice(index, 1)
+        const updateProblemSet = async (index: number) => {    
+            const { data } = await ProblemSet.update(problemSetData.list[index]);
+        }
+
+        const removeProblemSet = async (index: number) => {
+            const { data } = await ProblemSet.delete(problemSetData.list[index]);
+            problemSetData.list.splice(index, 1);
         }
 
         onMounted(() => {
@@ -191,7 +195,8 @@ export default defineComponent({
 
             selectAllProblemSet,
             addProblemSet,
-            removeProblemSet
+            updateProblemSet,
+            removeProblemSet,
         }
     }
 });

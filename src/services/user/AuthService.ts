@@ -1,4 +1,4 @@
-import axios from 'axios';
+import ApiService from "../ApiService";
 
 class AuthService {
     #admin;
@@ -21,12 +21,7 @@ class AuthService {
             this.#role = "admin"; // Set role to admin
         } else {
             try {
-                const response = await axios.post('http://localhost:3000/users/login', { username: username, password: password }, {
-                    headers: {
-                        'Authorization': `Bearer ${this.#token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+                const response = await ApiService.post('/auth/login', { username: username, password: password });
     
                 this.#role = "player"; // Set role to player
                 console.log('Data posted to API, response:', response.data);
